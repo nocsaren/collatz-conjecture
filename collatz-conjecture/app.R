@@ -6,9 +6,12 @@ library(parallel)
 
 
 ui <- dashboardPage(
-  dashboardHeader(title = "Basic dashboard"),
+  skin = "green",
+  dashboardHeader(title = "Collatz Sequence 1:5000"),
   dashboardSidebar(
+    
     sidebarMenu(
+      
       menuItem("Dashboard", tabName = "dashboard", icon = icon("th")),
       menuItem("Steps By Number", tabName = "by_number", icon = icon("th")),
       menuItem("Step Count By Number", tabName = "steps_number", icon = icon("th")),
@@ -24,14 +27,14 @@ ui <- dashboardPage(
       # Dashboard
       tabItem(tabName = "dashboard",
               fluidPage("some boxes will be here with some images"
-                
               )),
       # By Number
       tabItem(tabName = "by_number",
               fluidPage(
                 fluidRow("Steps By Number",
                   box("explain what the controls and graph are doing",
-                      width = NULL)),
+                      width = NULL,
+                      background = "green")),
                 fluidRow(
                   column(2,
                          box(
@@ -42,7 +45,8 @@ ui <- dashboardPage(
                                         min = 2,
                                         max = 5000), 
                            height = NULL,
-                           width = NULL
+                           width = NULL,
+                           background = "green"
                          )
                   ),
                   column(10,
@@ -50,7 +54,8 @@ ui <- dashboardPage(
                            title = "Graph",
                            plotlyOutput("plot1"), 
                            height = NULL,
-                           width = NULL))
+                           width = NULL,
+                           background = "green"))
                 ))),
       # Step Count By Number
       tabItem(tabName = "steps_number",
