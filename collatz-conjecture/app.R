@@ -17,9 +17,22 @@ ui <- dashboardPage(
       menuItem("Most Popular Stops", tabName = "occurrance", icon = icon("chart-column")),
       menuItem("Punching Above One's Height", tabName = "highest_reach", icon = icon("chart-column")),
       menuItem("The Wanderers", tabName = "highest_step_count", icon = icon("chart-column"))
-    )
+    ),
+    div(
+      style = "position: absolute; bottom: 2%; left: 50%; transform: translateX(-50%); width: 85%; text-align: center;",
+      div(
+        style = "border-radius: 50%; overflow: hidden; width: 150px; height: 150px; margin: 0 auto; position: relative; margin-bottom: 10%;",
+        p(style = "text-align: center", a(href = "https://nocsaren.netlify.app/", img(src = "hero.jpg", width = "100%", height = "100%", style = "position: absolute; top: 0; left: 0; right: 0; bottom: 0; object-fit: cover;")))
+      ),
+        div(
+          style = "color: #b8c7ce; font-size: 24px;",
+          a(href = "https://github.com/nocsaren", icon("github")),
+          a(href = "https://www.linkedin.com/in/burak-can-serdar/", icon("linkedin")),
+          a(href = "https://twitter.com/B_Can_Serdar", icon("twitter")),
+          a(href = "mailto:can_serdar@msn.com", icon("envelope"))
+        )
+      )
   ),
-  
   ## Body content
   dashboardBody(
     tabItems(
