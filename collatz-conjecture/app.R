@@ -2,22 +2,21 @@
 library(shinydashboard)
 library(tidyverse)
 library(plotly)
-library(parallel)
 
 
 ui <- dashboardPage(
-  skin = "green",
-  dashboardHeader(title = "Collatz Sequence 1:5000"),
+  skin = "blue",
+  dashboardHeader(title = "Collatz Conjecture 1:5000"),
   dashboardSidebar(
     
     sidebarMenu(
       
-      menuItem("Dashboard", tabName = "dashboard", icon = icon("th")),
-      menuItem("Steps By Number", tabName = "by_number", icon = icon("th")),
-      menuItem("Step Count By Number", tabName = "steps_number", icon = icon("th")),
-      menuItem(HTML("Most Occurring Numbers <br/>in Steps"), tabName = "occurrance", icon = icon("th")),
-      menuItem(HTML("Starting Numbers <br/>Reaching Highest Numbers"), tabName = "highest_reach", icon = icon("th")),
-      menuItem(HTML("Starting Numbers <br/>with Highest Number of Steps"), tabName = "highest_step_count", icon = icon("th"))
+      menuItem("Dashboard", tabName = "dashboard", icon = icon("house")),
+      menuItem("Paths of Numbers", tabName = "by_number", icon = icon("chart-line")),
+      menuItem("Many Ways to Reach One", tabName = "steps_number", icon = icon("chart-column")),
+      menuItem("Most Popular Stops", tabName = "occurrance", icon = icon("chart-column")),
+      menuItem("Punching Above One's Height", tabName = "highest_reach", icon = icon("chart-column")),
+      menuItem("The Wanderers", tabName = "highest_step_count", icon = icon("chart-column"))
     )
   ),
   
@@ -26,78 +25,132 @@ ui <- dashboardPage(
     tabItems(
       # Dashboard
       tabItem(tabName = "dashboard",
-              fluidPage("some boxes will be here with some images"
-              )),
-      # By Number
+              fluidPage(
+                fluidRow(
+                         box(background = "light-blue",
+                             width = NULL,
+                             solidHeader = FALSE,
+                             tags$h2("Collatz Conjecture"),
+                             p(style = "text-align: justify", "The Collatz conjecture is a famous unsolved problem in mathematics that asks whether repeating two simple arithmetic operations will eventually transform every positive integer into 1."),
+                             p(style = "text-align: justify", "The operations are: if the number is even, divide it by two; if the number is odd, triple it and add one."),
+                             p(style = "text-align: justify", "The conjecture was proposed by Lothar Collatz in 1937 and has not been proven or disproven yet.")),
+                         box(width = NULL,
+                             p(style = "text-align: justify", "I created this app to play around with the pathways of the starting numbers from 2 to 5000."),
+                             p(style = "text-align: justify", "I built a simple function in R to do the operations on each number < 5001 and get the change of value on each step for each number. The loop also counted the number of operations needed to reach 1 for each number. Following that, the function write these four values (starting number, step number, number change [n], and step count) to a dataframe, ready to be worked on."),
+                             p(style = "text-align: justify", "The shiny app you are now in loads the created dataframe and visualizes them with respect to some relations you can see on the left sidebar."),
+                             p(style = "text-align: justify", "The data and visualizations in the app, albeit are right, are not meant to make mathematical sense, they are only built for exploration and visualization.")),
+                         box(background = "light-blue",
+                           width = NULL,
+                           p(
+                             style = "text-align: justify;",
+                             "Source file to create the dataframe can be found ",
+                             a(href = "https://github.com/nocsaren/collatz-conjecture/blob/main/collatz-conjecture/collatz_function.R", style = "color: white;", "here"),
+                             "."
+                             
+                           ),
+                           p(
+                             style = "text-align: justify;",
+                             "Dataframe itself is ",
+                             a(href = "https://github.com/nocsaren/collatz-conjecture/blob/main/collatz-conjecture/collatz_output.rda", style = "color: white;", "here"),
+                             ". (.Rda File)"))
+              
+                ))),
+      # Paths of Numbers
       tabItem(tabName = "by_number",
               fluidPage(
-                fluidRow("Steps By Number",
-                  box("explain what the controls and graph are doing",
+                fluidRow(
+                  box(background = "light-blue",
                       width = NULL,
-                      background = "green")),
+                      solidHeader = FALSE,
+                      tags$h2("Paths of Numbers"),
+                      p(style = "text-align: justify", "Every number which ever tried to run in the operations eventually found its way to 1, but it is not yet proven wheather this is true for all numbers or not. As one can guess, numbers like 128 or 256 reach 1 easily, but some numbers, even relatively small ones like 27, need many steps to finish its path. On the other hand, numbers 26,  28, even the prime 29 reach 1 quite easily."))),
                 fluidRow(
                   column(2,
                          box(
-                           title = "Controls",
-                           numericInput("number", 
-                                        label = "Number to Plot", 
+                           title = "Number to Plot",
+                           numericInput("number",
+                                        label = "",
                                         value = 7,
                                         min = 2,
                                         max = 5000), 
-                           height = NULL,
                            width = NULL,
-                           background = "green"
+                           height = "100%"
                          )
                   ),
                   column(10,
                          box( 
-                           title = "Graph",
+                           title = "Pathway",
                            plotlyOutput("plot1"), 
-                           height = NULL,
                            width = NULL,
-                           background = "green"))
-                ))),
-      # Step Count By Number
+                           height = "auto"))
+                ),
+              fluidRow(
+                box(background = "light-blue",
+                    width = NULL,
+                    solidHeader = FALSE,
+                    p(style = "text-align: justify", "Above, you can plot the path of every number from 2 to 5000. Select or type a number in the left box to plot."),
+                    p(style = "text-align: justify", "You can hover on points for more details.")
+                    )))),
+
+        # Many Ways to Reach One
       tabItem(tabName = "steps_number",
                         fluidPage(
-                          fluidRow("Step Count By Number",
-                            box("explain what the controls and graph are doing",
-                                width = NULL)),          
+                          fluidRow(
+                            box(background = "light-blue",
+                                width = NULL,
+                                solidHeader = FALSE,
+                                tags$h2("Many Ways to Reach One"),
+                                p(style = "text-align: justify", "Although the number of steps to reach 1 vary from number to number, there is no known pattern of relation between the starting number and the number of steps needed to reach 1. One can intuitively say that as the starting number grows, number of steps must grow too, but as it can be seen in the default graph below, many of the numbers in the interval still have relatively small step counts."))),
+                          
                           
                 fluidRow(
                   column(2,
                          box(
                            title = "Controls",
-                           numericInput("start", 
-                                        "Start Value:", 
-                                        value = 2000,
-                                        min = 2,
-                                        max = 5000),
-                           numericInput("end", 
-                                        "End Value:", 
-                                        value = 2025,
-                                        min = 2,
-                                        max = 5000),
-                           
                            sliderInput("range",
                                        label = "Interval",
                                        round = TRUE,
                                        min = 2,
                                        max = 5000,
-                                       value = c(2000, 2025)),
+                                       value = c(1550, 1900)),
+                           numericInput("start", 
+                                        "Start Value:", 
+                                        value = 1550,
+                                        min = 2,
+                                        max = 5000),
+                           numericInput("end", 
+                                        "End Value:", 
+                                        value = 1900,
+                                        min = 2,
+                                        max = 5000),
                            width = NULL)),
                   column(10,
                          box(
                            title = "Graph",
                            plotlyOutput("plot2"), 
                            width = NULL))
-                ))),
-      # occurrace
-      tabItem(tabName = "occurrance",
+                )),
               fluidPage(
-                fluidRow("Most Occurring Numbers in Steps",
-                  box("explain what the controls and graph are doing",
-                      width = NULL)),
+                fluidRow(
+                  box(background = "light-blue",
+                      width = NULL,
+                      p(style = "text-align: justify", "You can select a custom interval with the left side slider. If you want to fine tune your input (or you are on a mobile device) you can type the start and end numbers (between 2 and 5000) in the boxes."),
+                      p(style = "text-align: justify", "You can hover on a column for more details."))),
+              )),
+      # Most Popular Stops
+      tabItem(tabName = "occurrance",
+              fluidPage(fluidRow(
+                box(background = "light-blue",
+                    width = NULL,
+                    solidHeader = FALSE,
+                    tags$h2("Most Popular Stops"),
+                    p(
+                      style = "text-align: justify;",
+                      "As can be expected, we see some numbers more often than others as being steps to one. For example, numbers in the form of 2",
+                      tags$sup("n"),
+                      " are more likely to occur. Also, from the graph below, we can guess that the numbers in the form of 20k have a tendency of occurring as steps."
+                    ))),
+
                 fluidRow(
                   column(2,
                          box(title = "Controls",
@@ -112,14 +165,24 @@ ui <- dashboardPage(
                          box(
                            title = "Graph",
                            plotlyOutput("plot3"), 
-                           width = NULL))
-                ))),
-      # highest reach
+                           width = NULL))),
+                fluidRow(
+                  box(background = "light-blue",
+                      width = NULL,
+                      p(style = "text-align: justify", "Above, you see the most popular 20 steps visited by numbers between 2 and 5000. You can select the number of steps shown on the graph with the slider on the left side. Maximum number of numbers shown is limited to 500 in this graph for performance reasons."),
+                      p(style = "text-align: justify", "You can hover on a column for more details.")))
+                )),
+      # Punching Above One's Height
       tabItem(tabName = "highest_reach",
               fluidPage(
-                fluidRow("Starting Numbers Reaching Highest Numbers",
-                         box("explain what the controls and graph are doing",
-                             width = NULL)),
+                fluidRow(
+                  box(background = "light-blue",
+                      width = NULL,
+                      solidHeader = FALSE,
+                      tags$h2("Punching Above One's Height"),
+                      p(style = "text-align: justify", "Although the conjecture states that starting from any number, the sequence of operations will eventually take us to 1; there are some numbers which, before starting their way to one, keep going higher and higher with their 3n+1 operations."))),
+                
+               
                 fluidRow(
                   column(2,
                          box(title = "Controls",
@@ -135,13 +198,22 @@ ui <- dashboardPage(
                            title = "Graph",
                            plotlyOutput("plot4"), 
                            width = NULL))
-                ))),
-      # highest num of steps
+                ),
+                fluidRow(
+                  box(background = "light-blue",
+                      width = NULL,
+                      p(style = "text-align: justify", "Above, you see 20 starting numbers which, on their way to one, go up to highest numbers between 2 and 5000. You can select the number of starting numbers shown on the graph with the slider on the left side. Again, maximum number of starting numbers shown is limited to 500 for performance reasons."),
+                      p(style = "text-align: justify", "You can hover on a column for more details."))))),
+      # The Wanderers
       tabItem(tabName = "highest_step_count",
               fluidPage(
-                fluidRow("Starting Numbers with Highest Number of Steps",
-                         box("explain what the controls and graph are doing",
-                             width = NULL)),
+                fluidRow(
+                  box(background = "light-blue",
+                      width = NULL,
+                      solidHeader = FALSE,
+                      tags$h2("The Wanderers"),
+                      p(style = "text-align: justify", "Also, some numbers take much more steps to reach their final destination, 1."))),
+                
                 fluidRow(
                   column(2,
                          box(title = "Controls",
@@ -156,10 +228,15 @@ ui <- dashboardPage(
                          box(
                            plotlyOutput("plot5"), 
                            width = NULL))
-                )))
+                ),
+                fluidRow(
+                  box(background = "light-blue",
+                      width = NULL,
+                      p(style = "text-align: justify", "Above, you see 20 starting numbers (between 2 and 5000) which take the most number of steps on their way to reaching one. You can select the number of starting numbers shown on the graph with the slider on the left side with a maximum of 500."),
+                      p(style = "text-align: justify", "You can hover on a column for more details.")))))
       ) #tabitems
     ) # body
-  ) # page
+  ) # dashboardpage
 server <- function(input, output, session) {
   load("collatz_output.rda")
   
@@ -176,7 +253,7 @@ server <- function(input, output, session) {
 
       o <- ggplot(dynamic_data_df, aes(x = x, y = y)) +
         geom_point() +
-        geom_line(color = "blue") +
+        geom_line(color = "#367fa9") +
         labs(x = "Steps", y = "n")
       plotly_plot <- ggplotly(o)
       
@@ -202,7 +279,7 @@ server <- function(input, output, session) {
         
 
         p <- ggplot(dynamic_data_df_2, aes(x = x, y = y)) +
-          geom_col()+
+          geom_col(fill = "#367fa9")+
           labs(x = "Starting Number", y = "Step Count")+
           scale_y_continuous(labels = scales::comma)
         
@@ -244,8 +321,9 @@ server <- function(input, output, session) {
         dynamic_data_df_3 <- dynamic_data_3()
         
         q <- ggplot(dynamic_data_df_3, aes(x = reorder(x, -y), y = y )) +
-          geom_col()+
-          labs(x = "Number", y = "Occurring Count")
+          geom_col(fill = "#367fa9")+
+          labs(x = "Number", y = "Occurring Count")+
+          theme(axis.text.x = element_blank())
         plotly_plot <- ggplotly(q)
         
 
@@ -280,7 +358,7 @@ server <- function(input, output, session) {
         dynamic_data_df_4 <- dynamic_data_4()
         
         r <- ggplot(dynamic_data_df_4, aes(x = reorder(x, -y), y = y )) +
-          geom_col()+
+          geom_col(fill = "#367fa9")+
           labs(x = "Starting Number", y = "Highest Number Reached in a Step")+
           theme(axis.text.x = element_blank())+
           scale_y_continuous(labels = scales::comma)
@@ -318,9 +396,10 @@ server <- function(input, output, session) {
         dynamic_data_df_5 <- dynamic_data_5()
         
         s <- ggplot(dynamic_data_df_5, aes(x = reorder(x, -y), y = y )) +
-          geom_col()+
+          geom_col(fill = "#367fa9")+
           labs(x = "Starting Number", y = "Number of Steps to Reach 1")+
           theme(axis.text.x = element_blank())
+        
         
         plotly_plot <- ggplotly(s)
         
