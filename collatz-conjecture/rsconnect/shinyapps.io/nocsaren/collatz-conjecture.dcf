@@ -5,8 +5,6 @@ account: nocsaren
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 9889482
-bundleId: 7699364
+bundleId: 7699593
 url: https://nocsaren.shinyapps.io/collatz-conjecture/
 version: 1
-asMultiple: FALSE
-asStatic: FALSE
